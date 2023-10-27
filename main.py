@@ -2,7 +2,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, DateTime, Float, Date, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, Date, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 engine = create_engine('mysql+mysqlconnector://root:''@localhost/aeroclub')
@@ -20,19 +20,6 @@ class ValorCuota(Base):
         self.vigente_desde = vigente_desde
 
 
-class Estados(Base):
-    __tablename__ = 'ESTADOS'
-    id_estados = Column(Integer, primary_key=True)
-    nombre = Column(String(45), nullable=False)
-    estado = Column(Integer, nullable=False)
-    productos_id = Column(Integer, nullable=False)
-
-    def __init__(self, nombre, estado, productos_id):
-        self.nombre = nombre
-        self.estado = estado
-        self.productos_id = productos_id
-
-
 class Usuarios(Base):
     __tablename__ = 'USUARIOS'
     id_usuarios = Column(Integer, primary_key=True)
@@ -45,7 +32,7 @@ class Usuarios(Base):
     fecha_baja = Column(Date, nullable=False)
     dirección = Column(String(100))
     foto_perfil = Column(Text)
-    estados_id = Column(Integer, ForeignKey('ESTADOS.id_estados'))
+    estado_hab_des = Column(Boolean, nullable=False)
 
     def __init__(self, nombre, apellido, email, telefono, dni, fecha_alta, fecha_baja, dirección, foto_perfil, estados_id):
         self.nombre = nombre
@@ -57,7 +44,7 @@ class Usuarios(Base):
         self.fecha_baja = fecha_baja
         self.dirección = dirección
         self.foto_perfil = foto_perfil
-        self.estados_id = estados_id
+        self.estado_hab_des = estado_hab_des
 
 
 class EstadoCMA(Base):
@@ -137,10 +124,9 @@ class Aeronaves(Base):
     descripcion = Column(Text)
     path_imagen_aeronave = Column(Text)
     estados_aeronaves_id = Column(Integer, ForeignKey('ESTADOS_AERONAVES.id_estados_aeronaves'))
-    estados_id = Column(Integer, ForeignKey('ESTADOS.id_estados'))
+    estado_hab_des = Column(Boolean, nullable=False)
 
-    def __init__(self, marca, modelo, matricula, potencia, clase, fecha_adquisicion, consumo_por_hora,
-                 path_documentacion, descripcion, path_imagen_aeronave, estados_aeronaves_id, estados_id):
+    def __init__(self, marca, modelo, matricula, potencia, clase, fecha_adquisicion, consumo_por_hora, path_documentacion, descripcion, path_imagen_aeronave, estados_aeronaves_id, estados_id):
         self.marca = marca
         self.modelo = modelo
         self.matricula = matricula
@@ -152,7 +138,7 @@ class Aeronaves(Base):
         self.descripcion = descripcion
         self.path_imagen_aeronave = path_imagen_aeronave
         self.estados_aeronaves_id = estados_aeronaves_id
-        self.estados_id = estados_id
+        self.estado_hab_des = estado_hab_des
 
 
 class TipoVuelosRecibos(Base):
@@ -332,9 +318,8 @@ class Productos(Base):
     cantidad_maxima = Column(Integer, nullable=False)
     fecha_ultimo_encargue = Column(Date, nullable=False)
     medidas_id = Column(Integer, ForeignKey('MEDIDAS.id_medidas'))
-    estados_id = Column(Integer, ForeignKey('ESTADOS.id_estados'))
+    estado_hab_des = Column(Boolean, nullable=False)
     medidas = relationship('Medidas')
-    estados = relationship('Estados')
 
     def __init__(self, nombre_producto, stock, precio, cantidad_minima, cantidad_maxima, fecha_ultimo_encargue, medidas_id, estados_id):
         self.nombre_producto = nombre_producto
@@ -344,7 +329,7 @@ class Productos(Base):
         self.cantidad_maxima = cantidad_maxima
         self.fecha_ultimo_encargue = fecha_ultimo_encargue
         self.medidas_id = medidas_id
-        self.estados_id = estados_id
+        self.estado_hab_des = estado_hab_des
 
 class UsuariosTieneRoles(Base):
     __tablename__ = 'USUARIOS_tiene_ROLES'
