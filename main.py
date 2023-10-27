@@ -34,7 +34,7 @@ class Usuarios(Base):
     foto_perfil = Column(Text)
     estado_hab_des = Column(Boolean, nullable=False)
 
-    def __init__(self, nombre, apellido, email, telefono, dni, fecha_alta, fecha_baja, dirección, foto_perfil, estados_id):
+    def __init__(self, nombre, apellido, email, telefono, dni, fecha_alta, fecha_baja, dirección, foto_perfil, estado_hab_des):
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
@@ -126,7 +126,7 @@ class Aeronaves(Base):
     estados_aeronaves_id = Column(Integer, ForeignKey('ESTADOS_AERONAVES.id_estados_aeronaves'))
     estado_hab_des = Column(Boolean, nullable=False)
 
-    def __init__(self, marca, modelo, matricula, potencia, clase, fecha_adquisicion, consumo_por_hora, path_documentacion, descripcion, path_imagen_aeronave, estados_aeronaves_id, estados_id):
+    def __init__(self, marca, modelo, matricula, potencia, clase, fecha_adquisicion, consumo_por_hora, path_documentacion, descripcion, path_imagen_aeronave, estados_aeronaves_id, estado_hab_des):
         self.marca = marca
         self.modelo = modelo
         self.matricula = matricula
@@ -321,7 +321,7 @@ class Productos(Base):
     estado_hab_des = Column(Boolean, nullable=False)
     medidas = relationship('Medidas')
 
-    def __init__(self, nombre_producto, stock, precio, cantidad_minima, cantidad_maxima, fecha_ultimo_encargue, medidas_id, estados_id):
+    def __init__(self, nombre_producto, stock, precio, cantidad_minima, cantidad_maxima, fecha_ultimo_encargue, medidas_id, estado_hab_des):
         self.nombre_producto = nombre_producto
         self.stock = stock
         self.precio = precio
