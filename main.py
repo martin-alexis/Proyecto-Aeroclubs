@@ -274,15 +274,37 @@ class Habilitaciones(Base):
 
 class Transacciones(Base):
     __tablename__ = 'TRANSACCIONES'
-    id_transacciones = Column(Integer, primary_key=True)
+    id_transacciones = Column(Integer, primary_key=True, nullable=True)
     monto = Column(Float, nullable=False)
     fecha = Column(Date, nullable=False)
     motivo = Column(String(200))
-
-    def __init__(self, monto, fecha, motivo):
+    medios_de_pago_id = Column(Integer, ForeignKey('MEDIOS_DE_PAGO.id_medios_de_pago'), nullable=False)
+    
+    def __init__(self, monto, fecha, motivo, medios_de_pago_id):
         self.monto = monto
         self.fecha = fecha
         self.motivo = motivo
+        self.medios_de_pago_id = medios_de_pago_id
+
+class MediosDePago(Base):
+    __tablename__ = 'MEDIOS_DE_PAGO'
+    id_medios_de_pago = Column(Integer, primary_key=True)
+    medio_pago = Column(String(45), nullable=False)
+    nombre_destinatario = Column(String(45))
+    fecha_vencimiento = Column(Date)
+    numero_serie = Column(String(45), unique=True)
+    fecha_emision = Column(Date)
+    numero_cuenta_bancaria = Column(Integer)
+    nombre_banco = Column(String(100))
+
+    def __init__(self, medio_pago, nombre_destinatario=None, fecha_vencimiento=None, numero_serie=None, fecha_emision=None, numero_cuenta_bancaria=None, nombre_banco=None):
+        self.medio_pago = medio_pago
+        self.nombre_destinatario = nombre_destinatario
+        self.fecha_vencimiento = fecha_vencimiento
+        self.numero_serie = numero_serie
+        self.fecha_emision = fecha_emision
+        self.numero_cuenta_bancaria = numero_cuenta_bancaria
+        self.nombre_banco = nombre_banco
 
 class Roles(Base):
     __tablename__ = 'ROLES'
@@ -338,15 +360,16 @@ class UsuariosTieneRoles(Base):
 
 class Tarifas(Base):
     __tablename__ = 'TARIFAS'
-    id_tarifas = Column(Integer, primary_key=True)
-    importe = Column(Float, nullable=False)
+    id_tarifas = Column(Integer, primary_key=True, nullable=True)
     vigente_desde = Column(Date, nullable=False)
-    aeronaves_id = Column(Integer, ForeignKey('AERONAVES.id_aeronaves'))
-    aeronaves = relationship('Aeronaves')
-
-    def __init__(self, importe, vigente_desde, aeronaves_id):
-        self.importe = importe
+    importe_vuelo = Column(Float, nullable=False)
+    importe_instruccion = Column(Float, nullable=False)
+    aeronaves_id = Column(Integer, ForeignKey('AERONAVES.id_aeronaves'), nullable=False)
+    
+    def __init__(self, vigente_desde, importe_vuelo, importe_instruccion, aeronaves_id):
         self.vigente_desde = vigente_desde
+        self.importe_vuelo = importe_vuelo
+        self.importe_instruccion = importe_instruccion
         self.aeronaves_id = aeronaves_id
 
 class CuotasSociales(Base):
